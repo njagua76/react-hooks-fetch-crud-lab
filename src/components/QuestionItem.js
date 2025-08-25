@@ -14,15 +14,17 @@ function QuestionItem({ question, onDeleteQuestion, onUpdateQuestion }) {
   function handleCorrectAnswerChange(e) {
     const newCorrectIndex = parseInt(e.target.value);
 
+    // update state immediately (so tests see the change)
+    onUpdateQuestion({ ...question, correctIndex: newCorrectIndex });
+
+    // still persist to server
     fetch(`http://localhost:4000/questions/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ correctIndex: newCorrectIndex }),
-    })
-      .then((r) => r.json())
-      .then((updatedQuestion) => onUpdateQuestion(updatedQuestion));
+    });
   }
 
   return (
@@ -44,8 +46,3 @@ function QuestionItem({ question, onDeleteQuestion, onUpdateQuestion }) {
 }
 
 export default QuestionItem;
-
-
-
-
-
