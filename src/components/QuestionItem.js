@@ -3,19 +3,23 @@ import React from "react";
 function QuestionItem({ question, onDeleteQuestion, onUpdateQuestion }) {
   const { id, prompt, answers, correctIndex } = question;
 
-  function handleDelete() {
+  // ✅ handle delete
+  function handleDeleteClick() {
     fetch(`http://localhost:4000/questions/${id}`, {
       method: "DELETE",
     }).then(() => onDeleteQuestion(id));
   }
 
+  // ✅ handle dropdown change (update correct answer)
   function handleCorrectAnswerChange(e) {
-    const updatedIndex = parseInt(e.target.value, 10);
+    const newCorrectIndex = parseInt(e.target.value);
 
     fetch(`http://localhost:4000/questions/${id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ correctIndex: updatedIndex }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ correctIndex: newCorrectIndex }),
     })
       .then((r) => r.json())
       .then((updatedQuestion) => onUpdateQuestion(updatedQuestion));
@@ -27,14 +31,14 @@ function QuestionItem({ question, onDeleteQuestion, onUpdateQuestion }) {
       <label>
         Correct Answer:
         <select value={correctIndex} onChange={handleCorrectAnswerChange}>
-          {answers.map((ans, index) => (
+          {answers.map((answer, index) => (
             <option key={index} value={index}>
-              {ans}
+              {answer}
             </option>
           ))}
         </select>
       </label>
-      <button onClick={handleDelete}>Delete</button>
+      <button onClick={handleDeleteClick}>Delete Question</button>
     </li>
   );
 }

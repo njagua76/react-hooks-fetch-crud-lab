@@ -7,34 +7,30 @@ function App() {
   const [page, setPage] = useState("List");
   const [questions, setQuestions] = useState([]);
 
-  // ✅ Fetch questions when app loads
+  // ✅ fetch questions on load
   useEffect(() => {
     fetch("http://localhost:4000/questions")
       .then((r) => r.json())
       .then((data) => setQuestions(data));
   }, []);
 
-  // ✅ Add new question
+  // ✅ add question
   function handleAddQuestion(newQuestion) {
     setQuestions([...questions, newQuestion]);
+    setPage("List"); // go back to list after adding
   }
 
-  // ✅ Delete question
+  // ✅ delete question
   function handleDeleteQuestion(id) {
-    fetch(`http://localhost:4000/questions/${id}`, {
-      method: "DELETE",
-    }).then(() => {
-      setQuestions(questions.filter((q) => q.id !== id));
-    });
+    setQuestions(questions.filter((q) => q.id !== id));
   }
 
-  // ✅ Update question (correct answer index)
+  // ✅ update question
   function handleUpdateQuestion(updatedQuestion) {
-    setQuestions(
-      questions.map((q) =>
-        q.id === updatedQuestion.id ? updatedQuestion : q
-      )
+    const updatedQuestions = questions.map((q) =>
+      q.id === updatedQuestion.id ? updatedQuestion : q
     );
+    setQuestions(updatedQuestions);
   }
 
   return (
