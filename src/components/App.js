@@ -7,50 +7,34 @@ function App() {
   const [page, setPage] = useState("List");
   const [questions, setQuestions] = useState([]);
 
-  // ✅ GET /questions on load
+  // ✅ Fetch questions when app loads
   useEffect(() => {
     fetch("http://localhost:4000/questions")
       .then((r) => r.json())
       .then((data) => setQuestions(data));
   }, []);
 
-  // ✅ POST /questions → add a new one
+  // ✅ Add new question
   function handleAddQuestion(newQuestion) {
-    fetch("http://localhost:4000/questions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newQuestion),
-    })
-      .then((r) => r.json())
-      .then((savedQuestion) => {
-        setQuestions([...questions, savedQuestion]);
-      });
+    setQuestions([...questions, newQuestion]);
   }
 
-  // ✅ DELETE /questions/:id
+  // ✅ Delete question
   function handleDeleteQuestion(id) {
     fetch(`http://localhost:4000/questions/${id}`, {
       method: "DELETE",
     }).then(() => {
-      const updated = questions.filter((q) => q.id !== id);
-      setQuestions(updated);
+      setQuestions(questions.filter((q) => q.id !== id));
     });
   }
 
-  // ✅ PATCH /questions/:id
+  // ✅ Update question (correct answer index)
   function handleUpdateQuestion(updatedQuestion) {
-    fetch(`http://localhost:4000/questions/${updatedQuestion.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ correctIndex: updatedQuestion.correctIndex }),
-    })
-      .then((r) => r.json())
-      .then((savedQuestion) => {
-        const updated = questions.map((q) =>
-          q.id === savedQuestion.id ? savedQuestion : q
-        );
-        setQuestions(updated);
-      });
+    setQuestions(
+      questions.map((q) =>
+        q.id === updatedQuestion.id ? updatedQuestion : q
+      )
+    );
   }
 
   return (
