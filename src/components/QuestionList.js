@@ -4,7 +4,7 @@ import QuestionItem from "./QuestionItem";
 function QuestionList({ questions, onDeleteQuestion, onUpdateQuestion }) {
   return (
     <section>
-      <h1>Questions</h1>
+      <h1>Quiz Questions</h1>
       <ul>
         {questions.map((q) => (
           <QuestionItem
